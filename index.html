@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Character encoding -->
+    <meta charset="UTF-8" />
+
+    <!-- Responsive layout for mobile devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Page title -->
+    <title>Chat App</title>
+  </head>
+
+  <body>
+    <!-- Heading that will be updated dynamically -->
+    <h1 id="title">Hello World</h1>
+
+    <!-- Load Socket.IO client library from the server -->
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+      // Create a Socket.IO client connection
+      const socket = io();
+
+      // Fired when the client successfully connects to the server
+      socket.on("connect", () => {
+        console.log("Connected:", socket.id);
+      });
+
+      // Listen for "message" event from the server
+      // "message" is a pre-reserved Socket.IO event
+      socket.on("message", (data) => {
+        console.log("Message from server:", data);
+
+        // Update the heading text using server data
+        document.getElementById("title").innerText =
+          data.description + " " + data.timestamp;
+      });
+
+      // Send a message event from client to server
+      // Uses the same pre-reserved "message" event
+      socket.emit("message", {
+        description: "Hello from client",
+      });
+
+      // Fired when the client disconnects from the server
+      socket.on("disconnect", () => {
+        console.log("Disconnected");
+      });
+    </script>
+  </body>
+</html>
