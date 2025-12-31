@@ -107,3 +107,12 @@ Ping/Pong are handled internally by Socket.IO.
 Custom event created on server side and caught on client side.
 
 Custom event created on client side and caught on server side.
+
+
+
+
+Summary Table
+Object	Sends to
+socket.emit()	Only the current client
+io.emit() / io.sockets.emit()	All clients
+socket.broadcast.emit()	All clients except sender

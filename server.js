@@ -1,41 +1,59 @@
-// Import Express framework
+
 const express = require("express");
 const app = express();
-
-// Create HTTP server using Express
 const http = require("http").createServer(app);
-
-// Import Socket.IO Server class
 const { Server } = require("socket.io");
-
-// Attach Socket.IO to the HTTP server
 const io = new Server(http);
-
-// Serve static files (index.html, client JS, etc.) from current directory
 app.use(express.static(__dirname));
+var users = 0;
 
-// Listen for new client connections
+// 1 Listen for new client connections
 io.on("connection", (socket) => {
   console.log("A user connected:", socket.id);
+  users++;
 
-  // Send a message to the client after 3 seconds
-  // "message" is a pre-reserved Socket.IO event
+  // 2 Broadcast to all connected clients
+  io.sockets.emit("broadcast", {
+    description: "New user connected",
+    totalUsers: users,
+  });
+
+  // 3 Send a message to the client after 2 seconds
   setTimeout(() => {
-    socket.emit(
-      "message",
-      {description: "Hello from Socket.IO server!", timestamp: new Date() }
-    );
-  }, 3000);
+    socket.emit("servermessage", {
+      description: "Hello from Socket.IO server!",
+      timestamp: new Date(),
+    });
+  }, 2000);
+
+  //4 Listen for messages from the client
+  socket.on("clientmessage", (data) => {
+    console.log("Received message from client:", data);
+  });
+
+
+
+
+  // 5 newly connected user
+  socket.emit("new user", {
+    message: "Welcome to the chat You joined successfully ",
+  });
+  // 6 all previously connected users that a new user is connected
+  socket.broadcast.emit("new user", {
+    message: users + " a new user connected",
+  });
 
   // Listen for client disconnection
   socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
-  });
-  // Listen for messages from the client
-  socket.on("message", (data) => {
-    console.log("Received message from client:", data);
+    users--;
+    console.log("Total users:", users);
+    io.sockets.emit("broadcast", {
+      description: "a user disconnected",
+      totalUsers: users,
+    });
   });
 });
+
 
 // Start the server on port 3000
 http.listen(3000, () => {
