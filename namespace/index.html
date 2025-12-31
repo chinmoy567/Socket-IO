@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat App</title>
+  </head>
+
+  <body>
+    <h1 id="title">Hello World</h1>
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      // Connect to namespace 1
+      var socket1 = io("/custom-namespace1");
+      socket1.on("customEvent", function (data) {
+        console.log("From namespace1:", data);
+      });
+
+      // Connect to namespace 2
+      var socket2 = io("/custom-namespace2");
+      socket2.on("customEvent", function (data) {
+        console.log("From namespace2:", data);
+      });
+    </script>
+  </body>
+</html>
