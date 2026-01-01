@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Socket.IO Rooms</title>
+  </head>
+  <body>
+    <h1 id="title">Waiting for connection...</h1>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+
+      socket.on("connectedRoom", function (data) {
+        document.getElementById("title").innerHTML =
+          data.message + " (" + data.room + ")";
+      });
+      socket.on("errorMessage", function (data) {
+        document.getElementById("title").innerHTML = data.message;
+      });
+    </script>
+  </body>
+</html>
