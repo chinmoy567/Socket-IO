@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Socket.IO App</title>
+
+    <!-- jQuery (optional, only if you really need it) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+    <!-- Socket.IO client (BEST PRACTICE) -->
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+    <button id="server-2">Trigger 30002 Port Socket</button>
+    <button id="server-3">Trigger 30003 Port Socket</button>
+
+    <script>
+      var socketServer1 = io("http://localhost:30001");
+      var socketServer2 = io("http://localhost:30002");
+      var socketServer3 = io("http://localhost:30003");
+
+      // Triggering event for server 2
+      $(document).ready(function () {
+        $("#server-2").click(function () {
+          socketServer2.emit("eventCreated", {
+            text: "Client hit the event for server 30002 port",
+          });
+        });
+      });
+      // Listening to response from server 2
+      socketServer2.on("responseFromServer1", function (data) {
+        alert(data.text);
+      });
+
+      // Triggering event for server 3
+      $(document).ready(function () {
+        $("#server-3").click(function () {
+          socketServer3.emit("eventCreated", {
+            text: "Client hit the event for server 30003 port",
+          });
+        });
+      });
+      // Listening to response from server 3
+      socketServer3.on("responseFromServer1", function (data) {
+        alert(data.text);
+      });
+    </script>
+  </body>
+</html>
